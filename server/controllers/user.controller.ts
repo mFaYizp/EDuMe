@@ -359,10 +359,10 @@ export const updateAvatar = catchAsyncError(
         }
       }
 
-      await user?.save()
-      await redis.set(userId,JSON.stringify(user))
+      await user?.save();
+      await redis.set(userId, JSON.stringify(user));
 
-      res.status(200).json({success:true,user})
+      res.status(200).json({ success: true, user });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
