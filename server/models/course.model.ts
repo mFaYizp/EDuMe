@@ -65,7 +65,8 @@ const commentSchema = new Schema<IComment>({
   commentReplies: [Object],
 });
 
-const courseDataSchema = new Schema<ICourseData>({
+const 
+courseDataSchema = new Schema<ICourseData>({
   videoUrl: String,
   title: String,
   videoSection: String,
