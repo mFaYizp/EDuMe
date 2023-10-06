@@ -1,13 +1,14 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
+import { IUser } from "./user.model";
 
 interface IComment extends Document {
-  user: object;
+  user: IUser;
   question: string;
   questionReplies?: IComment[];
 }
 
 interface IReview extends Document {
-  user: object;
+  user: IUser;
   rating: number;
   comment: string;
   commentReplies: IComment[];
@@ -89,7 +90,7 @@ const courseSchema = new Schema<ICourse>({
   tags: { type: String, required: true },
   level: { type: String, required: true },
   demoUrl: { type: String, required: true },
-  benefits: [{ type: String }],
+  benefits: [{ title: String }],
   prerequisites: [{ title: String }],
   reviews: [reviewSchema],
   courseData: [courseDataSchema],
