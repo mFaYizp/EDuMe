@@ -5,7 +5,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 
 // Create new order
 export const newOrder = catchAsyncError(
-  async (data: any, next: NextFunction, res: Response) => {
+  async (data: any,res: Response) => {
     const order = await orderModel.create(data);
 
     res.status(201).json({ success: true, order });
