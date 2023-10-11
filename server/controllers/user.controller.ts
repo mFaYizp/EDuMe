@@ -8,7 +8,11 @@ import path from "path";
 import sendMail from "../utils/sendMail";
 import { accessTokenOption, refreshTokenOption, sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
-import { getUserById } from "../services/user.service";
+import {
+  getAllUserService,
+  getUserById,
+  updateUserRoleServices,
+} from "../services/user.service";
 import cloudinary from "cloudinary";
 require("dotenv").config();
 
@@ -365,6 +369,32 @@ export const updateAvatar = catchAsyncError(
       res.status(200).json({ success: true, user });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// get all users ---- admin
+
+export const getAllUsers = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllUserService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// Update user role ----- admin
+
+export const updateUserRole = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id, role } = req.body;
+
+      updateUserRoleServices(res, role, id);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
     }
   }
 );
