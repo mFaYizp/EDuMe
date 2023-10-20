@@ -2,7 +2,8 @@
 
 import { FC, useState } from "react";
 import Heading from "./utils/Heading";
-import Header from "./components/Header";
+import Header from "./components/Headers";
+import Hero from "./components/Route/Hero";
 
 interface Props {}
 
@@ -17,6 +18,7 @@ const Page: FC<Props> = (props) => {
         keywords="Programming,MERN,Redux"
       />
       <Header open={open} setOpen={setOpen} activeItem={activeItem} />
+      <Hero/>
     </div>
   );
 };
