@@ -4,9 +4,17 @@ interface HeadProps {
   title: string;
   description: string;
   keywords: string;
+  route: string;
+  setRoute: (route: string) => void;
 }
 
-const Heading: FC<HeadProps> = ({ title, description, keywords }) => {
+const Heading: FC<HeadProps> = ({
+  title,
+  description,
+  keywords,
+  route,
+  setRoute,
+}) => {
   return (
     <>
       <title>{title}</title>
