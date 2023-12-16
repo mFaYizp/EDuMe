@@ -18,7 +18,7 @@ const schema = Yup.object().shape({
   password: Yup.string().required("Please enter password").min(6),
 });
 
-const Login: FC<Props> = ({setRoute}: Props) => {
+const Login: FC<Props> = ({ setRoute }: Props) => {
   const [show, setShow] = useState(false);
 
   const formik = useFormik({
@@ -34,7 +34,7 @@ const Login: FC<Props> = ({setRoute}: Props) => {
   return (
     <div className="w-full">
       <h1 className={`${styles.title}`}>Login with elearning</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <label className={`${styles.label}`} htmlFor="email">
           Enter you email
         </label>
@@ -45,19 +45,61 @@ const Login: FC<Props> = ({setRoute}: Props) => {
           onChange={handleChange}
           id="email"
           placeholder="mail@gmail.com"
-          className={`${
-            errors.email && touched.email && "border-red-500"
-          }${styles.input}`}
+          className={`${errors.email && touched.email && "border-red-500"}${
+            styles.input
+          }`}
         />
-        {errors.email && touched.email &&(
-            <span className="text-red-500 pt-2 block">{errors.email}</span>
+        {errors.email && touched.email && (
+          <span className="text-red-500 pt-2 block">{errors.email}</span>
         )}
-        <div className="w-full mt-5 relative mb-1">
-        <label className={`${styles.label}`} htmlFor="password">
-          Enter you password
-        </label>
-        <input type={!show ? 'password':'text'} name="" id="" />
+        <div className="w-full mt-5 relative mb-10 flex flex-col">
+          <label className={`${styles.label}`} htmlFor="password">
+            Enter you password
+          </label>
+          <input
+            type={!show ? "password" : "text"}
+            name="password"
+            id="password"
+            value={values.password}
+            onChange={handleChange}
+            placeholder="Password!@#"
+            className={`${
+              errors.password && touched.password && "border-red-500"
+            }${styles.input}`}
+          />
+          {!show ? (
+            <AiOutlineEyeInvisible
+              className="absolute bottom-3 right-2 z-1 cursor-pointer"
+              size={20}
+              onClick={() => setShow(true)}
+            />
+          ) : (
+            <AiOutlineEye
+              className="absolute bottom-3 right-2 z-1 cursor-pointer"
+              size={20}
+              onClick={() => setShow(false)}
+            />
+          )}
+          {errors.password && touched.password && (
+            <span className="text-red-500 pt-2 block">{errors.password}</span>
+          )}
         </div>
+        <div>
+          <input type="submit" value="Login" className={`${styles.button}`} />
+        </div>
+        <br />
+        <h5 className="text-center pt-4 font-poppins text-[13px] text-black dark:text-white">
+          Or join with
+        </h5>
+        <div className="flex items-center justify-center my-3">
+          <FcGoogle size={30} className="cursor-pointer mr-2" />
+          <AiFillGithub size={30} className="cursor-pointer ml-2" />
+        </div>
+        <h5 className="text-center pt-4 font-Poppins text-[14px]">
+          Not have any account?
+          <span className="text-[#2190ff] pl-1 cursor-pointer">Sign Up</span>
+        </h5>
+        <br />
       </form>
     </div>
   );
