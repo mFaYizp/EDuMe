@@ -26,6 +26,8 @@ const Login: FC<Props> = ({ setRoute }: Props) => {
     validationSchema: schema,
     onSubmit: async ({ email, password }) => {
       setRoute('Verification')
+      console.log(email,password);
+      
     },
   });
 
