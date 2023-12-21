@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -8,9 +8,12 @@ import {
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../../app/styles/style";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 type Props = {
   setRoute: (route: string) => void;
+  setOpen: (open: boolean) => void;
 };
 
 const schema = Yup.object().shape({
@@ -18,18 +21,30 @@ const schema = Yup.object().shape({
   password: Yup.string().required("Please enter password").min(6),
 });
 
-const Login: FC<Props> = ({ setRoute }: Props) => {
+const Login: FC<Props> = ({ setRoute, setOpen }: Props) => {
   const [show, setShow] = useState(false);
+  const [login, { isSuccess, error }] = useLoginMutation();
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: schema,
     onSubmit: async ({ email, password }) => {
-      setRoute('Verification')
-      console.log(email,password);
-      
+      await login({ email, password });
     },
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Login successfully!");
+      setOpen(false);
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+  },[isSuccess,error]);
 
   const { errors, touched, values, handleSubmit, handleChange } = formik;
 
@@ -83,9 +98,9 @@ const Login: FC<Props> = ({ setRoute }: Props) => {
             />
           )}
         </div>
-          {errors.password && touched.password && (
-            <span className="text-red-500 pt-2 block">{errors.password}</span>
-          )}
+        {errors.password && touched.password && (
+          <span className="text-red-500 pt-2 block">{errors.password}</span>
+        )}
         <div className="w-full mt-5">
           <input type="submit" value="Login" className={`${styles.button}`} />
         </div>
@@ -99,7 +114,12 @@ const Login: FC<Props> = ({ setRoute }: Props) => {
         </div>
         <h5 className="text-center pt-4 font-Poppins text-[14px]">
           Not have any account?
-          <span className="text-[#2190ff] pl-1 cursor-pointer" onClick={()=>setRoute('Sign-Up')}>Sign Up</span>
+          <span
+            className="text-[#2190ff] pl-1 cursor-pointer"
+            onClick={() => setRoute("Sign-Up")}
+          >
+            Sign Up
+          </span>
         </h5>
         <br />
       </form>
