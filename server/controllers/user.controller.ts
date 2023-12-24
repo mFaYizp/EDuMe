@@ -348,8 +348,8 @@ export const updateAvatar = catchAsyncError(
       const { avatar } = req.body as IUpdateProfile;
       const userId = req.user?._id;
 
-      const user = await userModel.findById(userId);
-
+      const user = await userModel.findById(userId);       
+      
       if (avatar && user) {
         if (user?.avatar?.public_id) {
           await cloudinary.v2.uploader.destroy(
