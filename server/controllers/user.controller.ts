@@ -275,17 +275,9 @@ interface IUpdateUserInfo {
 export const updateUserInfo = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { name, email } = req.body as IUpdateUserInfo;
+      const { name } = req.body as IUpdateUserInfo;
       const userId = req.user?._id;
       const user = await userModel.findById(userId);
-
-      if (email && user) {
-        const isEmailExist = await userModel.findOne({ email });
-        if (isEmailExist) {
-          return next(new ErrorHandler("Email already exist", 400));
-        }
-        user.email = email;
-      }
 
       if (name && user) {
         user.name = name;
@@ -348,8 +340,8 @@ export const updateAvatar = catchAsyncError(
       const { avatar } = req.body as IUpdateProfile;
       const userId = req.user?._id;
 
-      const user = await userModel.findById(userId);       
-      
+      const user = await userModel.findById(userId);
+
       if (avatar && user) {
         if (user?.avatar?.public_id) {
           await cloudinary.v2.uploader.destroy(
