@@ -341,12 +341,21 @@ export const updateAvatar = catchAsyncError(
       const userId = req.user?._id;
 
       const user = await userModel.findById(userId);
+      console.log(user);
 
       if (avatar && user) {
         if (user?.avatar?.public_id) {
           await cloudinary.v2.uploader.destroy(
             user?.avatar?.public_id as string
           );
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "avatars",
+            width: 150,
+          });
+          user.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+          };
         } else {
           const myCloud = await cloudinary.v2.uploader.upload(avatar, {
             folder: "avatars",

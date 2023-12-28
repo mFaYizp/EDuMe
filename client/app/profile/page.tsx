@@ -19,7 +19,7 @@ const page: FC<Props> = (props: Props) => {
     <div>
       <Protected>
         <Heading
-          title={`${user?.name} Profile`}
+          title={`${user?.name}'s Profile`}
           description="EDuMe is a platform for students to learn and get help from teachers"
           keywords="Programming,MERN,Redux"
         />
