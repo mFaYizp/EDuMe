@@ -341,7 +341,6 @@ export const updateAvatar = catchAsyncError(
       const userId = req.user?._id;
 
       const user = await userModel.findById(userId);
-      console.log(user);
 
       if (avatar && user) {
         if (user?.avatar?.public_id) {

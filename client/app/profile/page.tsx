@@ -7,8 +7,7 @@ import Header from "../components/Header";
 import Profile from "../components/Profile/Profile";
 import { useSelector } from "react-redux";
 
-type Props = {
-};
+type Props = {};
 
 const page: FC<Props> = (props: Props) => {
   const [open, setOpen] = useState(false);
@@ -19,7 +18,7 @@ const page: FC<Props> = (props: Props) => {
     <div>
       <Protected>
         <Heading
-          title={`${user?.name}'s Profile`}
+          title={`${user?.name}'s Profile - EDuMe`}
           description="EDuMe is a platform for students to learn and get help from teachers"
           keywords="Programming,MERN,Redux"
         />
