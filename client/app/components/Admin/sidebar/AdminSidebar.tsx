@@ -112,16 +112,17 @@ const AdminSidebar = () => {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                ml="15px"
+                ml="20px"
+                position="relative"
               >
                 <Link href="/">
-                  <h3 className="text-[25px] font-Poppins uppercase text-black dark:text-white">
+                  <h3 className="text-[25px] text-center font-Poppins uppercase text-black dark:text-white">
                     EDuMe.
                   </h3>
                 </Link>
                 <IconButton
                   onClick={() => setIsCollapsed(!isCollapsed)}
-                  className="inline-block"
+                  className="inline-block absolute left-[50px]"
                 >
                   <ArrowBackIosIcon className="text-black dark:text-[#ffffffc1]" />
                 </IconButton>
@@ -135,9 +136,11 @@ const AdminSidebar = () => {
                 <Image
                   src={user.avatar ? user.avatar.url : Avatar}
                   alt="profile-user"
-                  width={100}
                   height={100}
+                  width={100}
                   style={{
+                    objectFit: "cover",
+                    height: "100px",
                     cursor: "pointer",
                     borderRadius: "50%",
                     border: "3px solid #5b6fe6",
