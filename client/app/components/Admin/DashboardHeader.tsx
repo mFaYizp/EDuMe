@@ -21,12 +21,12 @@ const DashboardHeader: FC<Props> = (props: Props) => {
         </span>
       </div>
       {open && (
-        <div className="w-[350px] h-[50vh] dark:bg-[#111c43] bg-white shadow-xl absolute top-16 z-10 rounded">
-          <h5 className="text-center text-[20px] font-Poppins text-black dark:text-white p-3">
+        <div className="w-[350px] h-[50vh] dark:bg-[#111c43] bg-white shadow-xl absolute top-16 z-10 rounded text-black dark:text-white">
+          <h5 className="text-center text-[20px] font-Poppins p-3">
             Notifications
           </h5>
           <div className="dark:bg-[#2d3a4ea1] bg-[#00000013] font-Poppins border-b dark:border-b-[#ffffff47] border-b-[#0000000f]">
-            <div className="w-full flex item-center justify-between p-2 text-black dark:text-white">
+            <div className="w-full flex item-center justify-between p-2">
               <p>New Question Received</p>
               <p className="cursor-pointer">Mark as Read</p>
             </div>
