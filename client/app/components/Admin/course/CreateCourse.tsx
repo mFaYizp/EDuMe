@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import CourseInformation from "./CourseInformation"
-import CourseOptions from './CourseOptions'
+import CourseInformation from "./CourseInformation";
+import CourseOptions from "./CourseOptions";
 
 type Props = {};
 
@@ -37,11 +37,18 @@ const CreateCourse = (props: Props) => {
   const [courseData, setCourseData] = useState({});
   return (
     <div className="w-full flex min-h-screen">
-      <div className="w-[80%]">{active === 0 && (
-        <CourseInformation/>
-      ) }</div>
+      <div className="w-[80%]">
+        {active === 0 && (
+          <CourseInformation
+            active={active}
+            setCourseInfo={setCourseInfo}
+            courseInfo={courseInfo}
+            setActive={setActive}
+          />
+        )}
+      </div>
       <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
-        <CourseOptions  active={active} setActive={setActive}/> 
+        <CourseOptions active={active} setActive={setActive} />
       </div>
     </div>
   );
