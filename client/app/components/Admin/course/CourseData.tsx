@@ -41,7 +41,7 @@ const CourseData: FC<Props> = ({
   };
 
   const prevButton = () => {
-    setActive(active-1);
+    setActive(active - 1);
   };
 
   const handleOptions = () => {
@@ -49,7 +49,7 @@ const CourseData: FC<Props> = ({
       benefits[benefits.length - 1]?.title !== "" &&
       prerequisites[prerequisites.length]?.title !== ""
     ) {
-      setActive(active+1);
+      setActive(active + 1);
     } else {
       toast.error("Please fill the field for for go to next!");
     }
