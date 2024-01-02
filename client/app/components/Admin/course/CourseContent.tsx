@@ -212,7 +212,7 @@ const CourseContent: FC<Props> = ({
                       />
                     </div>
                     <div className="my-3 ">
-                      <label className={`${styles.label}`}>Video Title</label>
+                      <label className={`${styles.label}`}>Video URL</label>
                       <input
                         type="text"
                         value={item.videoUrl}

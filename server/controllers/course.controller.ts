@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import path from "path";
 import sendMail from "../utils/sendMail";
 import notificationModel from "../models/notification.model";
+import axios from "axios";
 
 //  upload Course
 
@@ -89,7 +90,7 @@ export const getSingleCourse = catchAsyncError(
             "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
           );
 
-        await redis.set(courseId, JSON.stringify(course),"EX",60);
+        await redis.set(courseId, JSON.stringify(course), "EX", 60);
 
         res.status(200).json({ success: true, course });
       }
@@ -381,16 +382,17 @@ export const AddReplyToReview = catchAsyncError(
   }
 );
 
-
 // get all Courses ---- admin
 
-export const getAllCourse = catchAsyncError(async(req: Request, res: Response, next: NextFunction)=>{
-  try {
-    getAllCourseService(res)
-  } catch (error:any) {
-    return next(new ErrorHandler(error.message, 500))
+export const getAllCourse = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllCourseService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   }
-})
+);
 
 //delete course
 export const deleteCourse = catchAsyncError(
@@ -411,6 +413,29 @@ export const deleteCourse = catchAsyncError(
         .json({ success: true, message: "Course Deleted Successfully" });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+// Generate video url
+export const generateVideoUrl = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { videoId } = req.body;
+      const response = await axios.post(
+        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+        { ttl: 300 },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Apisecret ${process.env.VIDEO_CIPHER_API_KEY}`,
+          },
+        }
+      );
+      res.json(response.data);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
     }
   }
 );
