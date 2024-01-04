@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
 import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
@@ -6,11 +6,13 @@ import { useTheme } from "next-themes";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
 import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import { styles } from "@/app/styles/style";
 
-type Props = {};
+type Props = { isTeam: boolean };
 
-const AllUsers = (props: Props) => {
+const AllUsers: FC<Props> = ({ isTeam }) => {
   const { theme, setTheme } = useTheme();
+  const [active, setActive] = useState(false);
 
   const { isLoading, data, error } = useGetAllUsersQuery({});
 
@@ -56,7 +58,21 @@ const AllUsers = (props: Props) => {
 
   const rows: any = [];
 
-  {
+  if (isTeam) {
+    const newData =
+      data && data.users.filter((item: any) => item.role === "admin");
+    newData &&
+      newData.forEach((item: any) => {
+        rows.push({
+          id: item._id,
+          name: item.name,
+          email: item.email,
+          role: item.role,
+          courses: item.courses.length,
+          created_at: format(item.createdAt),
+        });
+      });
+  } else {
     data &&
       data.users.forEach((item: any) => {
         rows.push({
@@ -72,10 +88,18 @@ const AllUsers = (props: Props) => {
 
   return (
     <div className="mt-[120px] dark:text-white">
-      <Box m="20px">
-        {isLoading ? (
-          <Loader />
-        ) : (
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Box m="20px">
+          <div className="w-full flex justify-end">
+            <div
+              className={`${styles.button} !w-[200px] dark:bg-[#3a43e6] bg-[#7083f2] !h-[35px]`}
+              onClick={() => setActive(!active)}
+            >
+              Add new Member
+            </div>
+          </div>
           <Box
             m="40px 0 0 0"
             height="80vh"
@@ -128,8 +152,8 @@ const AllUsers = (props: Props) => {
           >
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
     </div>
   );
 };
