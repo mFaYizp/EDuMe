@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import { FiEdit2 } from "react-icons/fi";
 import { useGetAllCoursesQuery } from "@/redux/features/courses/courseApi";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
+import { styles } from "@/app/styles/style";
 
 type Props = {};
 
 const AllCourses = (props: Props) => {
   const { theme, setTheme } = useTheme();
+  const [open, setOpen] = useState(false);
+  const [courseId, setCourseId] = useState("");
 
   const { isLoading, data, error } = useGetAllCoursesQuery({});
 
@@ -46,6 +49,10 @@ const AllCourses = (props: Props) => {
               <AiOutlineDelete
                 className="dark:text-white text-black"
                 size={20}
+                onClick={() => {
+                  setOpen(!open);
+                  setCourseId(params.row.id);
+                }}
               />
             </Button>
           </>
@@ -69,12 +76,14 @@ const AllCourses = (props: Props) => {
       });
   }
 
+  const handleDelete = () => {};
+
   return (
     <div className="mt-[120px] dark:text-white">
-      <Box m="20px">
-        {isLoading ? (
-          <Loader />
-        ) : (
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Box m="20px">
           <Box
             m="40px 0 0 0"
             height="80vh"
@@ -127,8 +136,33 @@ const AllCourses = (props: Props) => {
           >
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
-        )}
-      </Box>
+          {open && (
+            <Modal
+              open={open}
+              onClose={() => setOpen(!open)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2">
+                <h1 className={`${styles.title}`}>
+                  Are you sure do you want to delete this course?
+                </h1>
+                <div className="flex w-full items-center justify-between mb-6">
+                  <div
+                    className={`${styles.button}`}
+                    onClick={() => setOpen(!open)}
+                  >
+                    Cancel
+                  </div>
+                  <div className={`${styles.button}`} onClick={handleDelete}>
+                    Delete
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          )}
+        </Box>
+      )}
     </div>
   );
 };
