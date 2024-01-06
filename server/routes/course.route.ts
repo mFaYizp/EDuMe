@@ -7,7 +7,7 @@ import {
   deleteCourse,
   editCourse,
   generateVideoUrl,
-  getAllCourse,
+  getAdminAllCourses,
   getAllCourses,
   getCourseByUser,
   getSingleCourse,
@@ -70,11 +70,11 @@ courseRouter.put(
 );
 
 courseRouter.get(
-  "/get-all-courses",
+  "/get-admin-courses",
   updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),
-  getAllCourse
+  getAdminAllCourses
 );
 
 courseRouter.delete(

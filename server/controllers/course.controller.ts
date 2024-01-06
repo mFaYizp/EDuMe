@@ -105,7 +105,7 @@ export const getSingleCourse = catchAsyncError(
 export const getAllCourses = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const isCacheExist = await redis.get("allCourses");
+      // const isCacheExist = await redis.get("allCourses");
 
       const courses = await courseModel
         .find()
@@ -376,7 +376,7 @@ export const AddReplyToReview = catchAsyncError(
 
 // get all Courses ---- admin
 
-export const getAllCourse = catchAsyncError(
+export const getAdminAllCourses = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       getAllCourseService(res);

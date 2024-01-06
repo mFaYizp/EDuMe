@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button, Modal } from "@mui/material";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import { FiEdit2 } from "react-icons/fi";
-import { useGetAllCoursesQuery } from "@/redux/features/courses/courseApi";
+import {
+  useDeleteCoursesMutation,
+  useGetAllCoursesQuery,
+} from "@/redux/features/courses/courseApi";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
 import { styles } from "@/app/styles/style";
+import toast from "react-hot-toast";
+import Link from "next/link";
 
 type Props = {};
 
@@ -16,7 +21,11 @@ const AllCourses = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState("");
 
-  const { isLoading, data, error } = useGetAllCoursesQuery({});
+  const { isLoading, data, refetch } = useGetAllCoursesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+  const [deleteCourse, { isSuccess, error }] = useDeleteCoursesMutation({});
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -31,9 +40,9 @@ const AllCourses = (props: Props) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button>
+            <Link href={`/admin/edit-course/${params.row.id}`}>
               <FiEdit2 className="dark:text-white text-black" size={20} />
-            </Button>
+            </Link>
           </>
         );
       },
@@ -76,7 +85,24 @@ const AllCourses = (props: Props) => {
       });
   }
 
-  const handleDelete = () => {};
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      setOpen(false);
+      toast.success("Course deleted successfully!");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [isSuccess, error, refetch]);
+
+  const handleDelete = async () => {
+    const id = courseId;
+    await deleteCourse(id);
+  };
 
   return (
     <div className="mt-[120px] dark:text-white">
@@ -149,12 +175,15 @@ const AllCourses = (props: Props) => {
                 </h1>
                 <div className="flex w-full items-center justify-between mb-6">
                   <div
-                    className={`${styles.button}`}
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#24bbb4fe]`}
                     onClick={() => setOpen(!open)}
                   >
                     Cancel
                   </div>
-                  <div className={`${styles.button}`} onClick={handleDelete}>
+                  <div
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f]`}
+                    onClick={handleDelete}
+                  >
                     Delete
                   </div>
                 </div>
