@@ -169,7 +169,7 @@ const AllCourses = (props: Props) => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2">
+              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">
                 <h1 className={`${styles.title}`}>
                   Are you sure do you want to delete this course?
                 </h1>

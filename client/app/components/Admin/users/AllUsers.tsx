@@ -1,12 +1,17 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
-import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import {
+  useDeleteUsersMutation,
+  useGetAllUsersQuery,
+  useUpdateUserRoleMutation,
+} from "@/redux/features/user/userApi";
 import { styles } from "@/app/styles/style";
+import toast from "react-hot-toast";
 
 type Props = { isTeam: boolean };
 
@@ -18,7 +23,14 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
 
-  const { isLoading, data, error } = useGetAllUsersQuery({});
+  const { isLoading, data, refetch } = useGetAllUsersQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+  const [deleteUser, { isSuccess: deleteSuccess, error }] =
+    useDeleteUsersMutation({});
+  const [updateUserRole, { error: updateError, isSuccess }] =
+    useUpdateUserRoleMutation();
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.3 },
@@ -95,20 +107,56 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       });
   }
 
+  useEffect(() => {
+    if (updateError) {
+      if ("data" in updateError) {
+        const errorMessage = updateError as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+    if (isSuccess) {
+      refetch();
+      setOpen(false);
+      toast.success("User role updated successfully!");
+    }
+    if (deleteSuccess) {
+      refetch();
+      setOpen(false);
+      toast.success("User deleted successfully!");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [isSuccess, error, updateError, deleteSuccess, refetch]);
+
+  const handleSubmit = async () => {
+    await updateUserRole({ email, role });
+  };
+
+  const handleDelete = async () => {
+    const id = userId;
+    await deleteUser(id);
+  };
+
   return (
     <div className="mt-[120px] dark:text-white">
       {isLoading ? (
         <Loader />
       ) : (
         <Box m="20px">
-          <div className="w-full flex justify-end">
-            <div
-              className={`${styles.button} !w-[200px] dark:bg-[#3a43e6] bg-[#7083f2] !h-[35px]`}
-              onClick={() => setActive(!active)}
-            >
-              Add new Member
+          {isTeam && (
+            <div className="w-full flex justify-end">
+              <div
+                className={`${styles.button} !w-[200px] dark:bg-[#3a43e6] bg-[#7083f2] !h-[35px]`}
+                onClick={() => setActive(!active)}
+              >
+                Add new Member
+              </div>
             </div>
-          </div>
+          )}
           <Box
             m="40px 0 0 0"
             height="80vh"
@@ -161,6 +209,76 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
           >
             <DataGrid checkboxSelection rows={rows} columns={columns} />
           </Box>
+          {active && (
+            <Modal
+              open={active}
+              onClose={() => setActive(!active)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="absolute top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2 p-5 bg-white rounded dark:bg-[#090938]">
+                <h1 className={`${styles.title} !my-5 text-[20px]`}>
+                  Add New Member
+                </h1>
+                <div className="flex items-center justify-center flex-col m-5">
+                  <form onSubmit={handleSubmit}>
+                    <input
+                      type="email"
+                      className={`${styles.input}`}
+                      placeholder="Enter email..."
+                      onChange={(e: any) => setEmail(e.target.value)}
+                    />
+                    <select
+                      name="role"
+                      value={role}
+                      required
+                      className={`${styles.input}`}
+                      onChange={(e: any) => setRole(e.target.value)}
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
+                    </select>
+                    <div className="w-full mt-8">
+                      <input
+                        type="submit"
+                        value="Submit"
+                        className={`${styles.button}`}
+                      />
+                    </div>
+                  </form>
+                </div>
+              </Box>
+            </Modal>
+          )}
+          ,
+          {open && (
+            <Modal
+              open={open}
+              onClose={() => setOpen(!open)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white rounded p-5">
+                <h1 className={`${styles.title} text-[20px]`}>
+                  Are you sure do you want to delete this course?
+                </h1>
+                <div className="flex w-full items-center justify-between mt-6">
+                  <div
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#24bbb4fe]`}
+                    onClick={() => setOpen(!open)}
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f]`}
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          )}
         </Box>
       )}
     </div>
