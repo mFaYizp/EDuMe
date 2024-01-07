@@ -232,7 +232,7 @@ const CourseContent: FC<Props> = ({
                       <textarea
                         rows={8}
                         cols={30}
-                        value={item.Description}
+                        value={item.description}
                         placeholder="sdder"
                         className={`${styles.input} !h-min py-2`}
                         onChange={(e) => {

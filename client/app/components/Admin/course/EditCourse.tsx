@@ -130,7 +130,9 @@ const EditCourse: FC<Props> = ({ id }) => {
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
 
-    await editCourse(data);
+    await editCourse({ id: editCourseData?._id, data });
+    console.log(editCourseData?._id);
+    
   };
 
   return (
