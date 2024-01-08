@@ -49,9 +49,9 @@ const EditHero: FC<Props> = () => {
           </div>
         </div>
 
-        <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[150px]">
+        <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[150px] ">
           <textarea
-            className="dark:text-white resize-none text-[#000000c7] text-[30px] px-3 w-full 1000px:text-[60px] 1500px:text-[70px] bg-transparent"
+            className="dark:text-white resize-none text-[#000000c7] text-[30px] px-3 w-full 1000px:text-[60px] 1500px:text-[70px] font-[600] bg-transparent 1500px:px-[200px] 1500px:ml-[150px] leading-[75px]"
             placeholder="Improve Your Online Learning Experience Better Instantly"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -59,7 +59,7 @@ const EditHero: FC<Props> = () => {
           />
           <br />
           <textarea
-            className="dark:text-[#edfff4] font-josefin text-[#000000ac] font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent"
+            className="dark:text-[#edfff4] font-josefin text-[#000000ac] font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent 1500px:ml-[115px]"
             value={subtitle}
             placeholder="We have 40k+ Online courses & 500K+ Online registered student. Find your desired Courses from them."
             onChange={(e) => setSubtitle(e.target.value)}
