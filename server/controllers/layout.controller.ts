@@ -17,13 +17,16 @@ export const createLayout = catchAsyncError(
       if (type === "Banner") {
         const { image, title, subtitle } = req.body;
         const myCloud = await cloudinary.v2.uploader.upload(image, {
-          folder: "layout",
+          folder: "layout", 
         });
 
         const banner = {
-          image: { public_id: myCloud.public_id, url: myCloud.url },
-          title,
-          subtitle,
+          type: "Banner",
+          banner: {
+            image: { public_id: myCloud.public_id, url: myCloud.secure_url },
+            title,
+            subtitle,
+          },
         };
         await layoutModel.create(banner);
       }
@@ -141,9 +144,9 @@ export const editLayout = catchAsyncError(
 export const getLayoutByType = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { type } = req.body;
+      const { type } = req.params;
 
-      const layout = await layoutModel.findOne({type});
+      const layout = await layoutModel.findOne({ type });
 
       res.status(200).json({ success: true, layout });
     } catch (error: any) {
