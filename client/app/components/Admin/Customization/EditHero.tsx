@@ -38,18 +38,13 @@ const EditHero: FC<Props> = () => {
 
   const handleUpdate = (e: any) => {
     const file = e.target.files?.[0];
-    console.log(file);
-
     if (file) {
       const reader = new FileReader();
-console.log('hi');
-
       reader.onload = (e) => {
         if (reader.readyState === 2) {
           setImage(e.target?.result as string);
         }
       };
-
       reader.readAsDataURL(file);
     }
   };
