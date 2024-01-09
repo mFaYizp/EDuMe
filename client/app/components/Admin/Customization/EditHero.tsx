@@ -1,6 +1,10 @@
 import { styles } from "@/app/styles/style";
-import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
+import {
+  useEditLayoutMutation,
+  useGetHeroDataQuery,
+} from "@/redux/features/layout/layoutApi";
 import React, { FC, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineCamera } from "react-icons/ai";
 
 type Props = {};
@@ -9,9 +13,10 @@ const EditHero: FC<Props> = () => {
   const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
-  const { data } = useGetHeroDataQuery("Banner", {
+  const { data, refetch } = useGetHeroDataQuery("Banner", {
     refetchOnMountOrArgChange: true,
   });
+  const [editLayout, { isLoading, isSuccess, error }] = useEditLayoutMutation();
 
   useEffect(() => {
     if (data) {
@@ -19,25 +24,53 @@ const EditHero: FC<Props> = () => {
       setSubtitle(data?.layout?.banner.subtitle);
       setImage(data?.layout?.banner?.image?.url);
     }
-  }, [data]);
+    if (isSuccess) {
+      refetch();
+      toast.success("Hero updated successfully!");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData?.data?.message);
+      }
+    }
+  }, [data, isSuccess, error]);
 
-  const handleUpdate = (e: any) => {};
-  const handleEdit = () => {};
+  const handleUpdate = (e: any) => {
+    const file = e.target.files?.[0];
+    console.log(file);
+
+    if (file) {
+      const reader = new FileReader();
+console.log('hi');
+
+      reader.onload = (e) => {
+        if (reader.readyState === 2) {
+          setImage(e.target?.result as string);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEdit = async () => {
+    await editLayout({ type: "Banner", image, title, subtitle });
+  };
 
   return (
     <>
       <div className="w-full 1000px:flex items-center">
         <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[600px] 1100px:w-[600px] h-[50vh] w-[50vh] hero_animation rounded-[50%] 1100px:left-[18rem] 1500px:left-[21rem]"></div>
-        <div className="1000px:w-[30%] flex  1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt-[0] z-10 ">
+        <div className="1000px:w-[35%] flex  1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt-[0] z-10 1500px:ml-[70px]">
           <div className="relative flex items-center justify-end">
             <img
               src={image}
               alt="Hero"
-              className="object-contain 1100px:max-w-[90%] w-[100%] 1500px:max-w-[85%] h-[auto] z-[10]"
+              className="object-contain 1100px:max-w-[90%] w-[90%] 1500px:max-w-[95%] h-[auto] z-[10]"
             />
             <input
               type="file"
-              name=""
               id="banner"
               accept="image/*"
               onChange={handleUpdate}
@@ -51,7 +84,7 @@ const EditHero: FC<Props> = () => {
 
         <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[150px] ">
           <textarea
-            className="dark:text-white resize-none text-[#000000c7] text-[30px] px-3 w-full 1000px:text-[60px] 1500px:text-[70px] font-[600] bg-transparent 1500px:px-[200px] 1500px:ml-[150px] leading-[75px]"
+            className="dark:text-white resize-none text-[#000000c7] text-[30px] px-3 w-full 1000px:text-[60px] 1500px:text-[70px] font-[600] bg-transparent 1500px:px-[200px] 1500px:ml-[0px] leading-[75px] outline-none"
             placeholder="Improve Your Online Learning Experience Better Instantly"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -59,7 +92,7 @@ const EditHero: FC<Props> = () => {
           />
           <br />
           <textarea
-            className="dark:text-[#edfff4] font-josefin text-[#000000ac] font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent 1500px:ml-[115px]"
+            className="dark:text-[#edfff4] font-josefin text-[#000000ac] font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[74%] bg-transparent 1500px:ml-[-30px] outline-none"
             value={subtitle}
             placeholder="We have 40k+ Online courses & 500K+ Online registered student. Find your desired Courses from them."
             onChange={(e) => setSubtitle(e.target.value)}

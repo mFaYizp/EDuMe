@@ -17,7 +17,7 @@ export const createLayout = catchAsyncError(
       if (type === "Banner") {
         const { image, title, subtitle } = req.body;
         const myCloud = await cloudinary.v2.uploader.upload(image, {
-          folder: "layout", 
+          folder: "layout",
         });
 
         const banner = {
@@ -77,15 +77,30 @@ export const editLayout = catchAsyncError(
       if (type === "Banner") {
         const bannerData: any = await layoutModel.findOne({ type: "Banner" });
         const { image, title, subtitle } = req.body;
-        if (bannerData) {
-          await cloudinary.v2.uploader.destroy(bannerData.image.public_id);
-        }
-        const myCloud = await cloudinary.v2.uploader.upload(image, {
-          folder: "layout",
-        });
+
+        // if (bannerData) {
+        //   await cloudinary.v2.uploader.destroy(bannerData.image.public_id);
+        // }
+
+        const data = image.startsWith("https")
+          ? bannerData
+          : await cloudinary.v2.uploader.upload(image, {
+              folder: "layout",
+            });
+        // const myCloud = await cloudinary.v2.uploader.upload(image, {
+        //   folder: "layout",
+        // });
+
         const banner = {
           type: "Banner",
-          image: { public_id: myCloud.public_id, url: myCloud.url },
+          image: {
+            public_id: image.startsWith("https")
+              ? bannerData.banner.image.public_id
+              : data?.public_id,
+            url: image.startsWith("https")
+              ? bannerData.banner.image.url
+              : data?.secure_url,
+          },
           title,
           subtitle,
         };
