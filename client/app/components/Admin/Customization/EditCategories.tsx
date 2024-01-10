@@ -35,7 +35,7 @@ const EditCategories = (props: Props) => {
         toast.error(errorData?.data?.message);
       }
     }
-  }, [data,isSuccess,error]);
+  }, [data, isSuccess, error]);
 
   const handleCategoriesAdd = async (id: any, value: string) => {
     setCategories((prevCategory: any) =>
@@ -96,6 +96,7 @@ const EditCategories = (props: Props) => {
                       onChange={(e) =>
                         handleCategoriesAdd(item._id, e.target.value)
                       }
+                      key={index}
                     />
                     <AiOutlineDelete
                       className="dark:text-white text-black text-[18px] cursor-pointer"
