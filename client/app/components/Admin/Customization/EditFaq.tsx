@@ -173,7 +173,7 @@ const EditFaq = (props: Props) => {
             Save
           </div>
         </div>
-      )}{" "}
+      )}
     </>
   );
 };
