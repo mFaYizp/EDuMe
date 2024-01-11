@@ -32,7 +32,7 @@ const CoursesAnalytics: FC<Props> = ({ isDashboard }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className={isDashboard ? "h-screen" : "h-screen"}>
+        <div className={isDashboard ? "h-[30vh]" : "h-screen"}>
           <div
             className={isDashboard ? "mt-[Opx] pl-[40px] mb-2" : "mt-[50px]"}
           >

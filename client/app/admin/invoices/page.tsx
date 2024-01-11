@@ -1,10 +1,11 @@
 "use client";
-
+import DashboardHero from "@/app/components/Admin/DashboardHero";
+import AllUsers from "@/app/components/Admin/users/AllUsers";
+import AdminSidebar from "@/app/components/Admin/sidebar/AdminSidebar";
+import AdminProtected from "@/app/hooks/adminProtected";
+import Heading from "@/app/utils/Heading";
 import React from "react";
-import Heading from "../utils/Heading";
-import AdminSidebar from "../components/Admin/sidebar/AdminSidebar";
-import AdminProtected from "../hooks/adminProtected";
-import DashboardHero from "../components/Admin/DashboardHero"
+import AllInvoices from "@/app/components/Admin/Order/AllInvoices";
 
 type Props = {};
 
@@ -22,9 +23,12 @@ const Page = (props: Props) => {
             <AdminSidebar />
           </div>
           <div className="w-[85%]">
-            <DashboardHero isDashboard={true}/>
+            <DashboardHero />
+            <AllInvoices isDashboard={false} />
           </div>
         </div>
+        <br />
+        <br />
       </AdminProtected>
     </div>
   );

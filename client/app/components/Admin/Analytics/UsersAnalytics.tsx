@@ -11,21 +11,6 @@ import {
 import Loader from "../../Loader/Loader";
 import { styles } from "@/app/styles/style";
 
-// const analyticsData = [
-//   { name: "January 2023", count: 440 },
-//   { name: "February 2023", count: 8200 },
-//   { name: "March 2023", count: 4033 },
-//   { name: "April 2023", count: 4502 },
-//   { name: "May 2023", count: 2042 },
-//   { name: "Jun 2023", count: 3454 },
-//   { name: "July 2023", count: 356 },
-//   { name: "Aug 2023", count: 5667 },
-//   { name: "Sept 2023", count: 1320 },
-//   { name: "Oct 2023", count: 6526 },
-//   { name: "Nov 2023", count: 5480 },
-//   { name: "December 2023", count: 485 },
-// ];
-
 type Props = { isDashboard?: boolean };
 
 const CoursesAnalytics: FC<Props> = ({ isDashboard }) => {
