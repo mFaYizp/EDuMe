@@ -8,6 +8,7 @@ const Footer = (props: Props) => {
     <footer>
       <div className="border border-black dark:border-[#ffffff1e]" />
       <br />
+      <br />
       <div className="w-[95%] 800px:w-full 800px:max-w-[85%] mx-auto px-2 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="space-y-3">
@@ -111,22 +112,22 @@ const Footer = (props: Props) => {
               Contact Info
             </h3>
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-              <b>Call Us:</b> 1-885-4443-2024
+              Call Us: 1-885-4443-2024
             </p>
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-              <b>Address:</b>{" "}
+              Address:{"  "}
               <i className="text-[300]">
-                Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,
-                Bangalore-560016
+                1st Block 1st Cross, Rammurthy nagar, Bangalore-560016
               </i>
             </p>
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-              <b>Mail Us:</b> edume@gmail.com
+              Mail Us: edume@gmail.com
             </p>
           </div>
         </div>
         <br />
-        <p className="text-center text-gray-500 dark:text-gray-400 mt-10">
+        <br />
+        <p className="text-center text-gray-500 dark:text-gray-400">
           Copyright © 2024 EDuMe | All Rights Reserved
         </p>
       </div>
