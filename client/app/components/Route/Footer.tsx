@@ -21,7 +21,7 @@ const Footer = (props: Props) => {
                   href="/about"
                   className="text-base text-black dark:text-gray-300 dark:hover:text-white"
                 >
-                  Our Story{" "}
+                  Our Story
                 </Link>
               </li>
               <li>
