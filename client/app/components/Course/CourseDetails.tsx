@@ -97,7 +97,7 @@ const CourseDetails: FC<Props> = ({ data }) => {
                 Course overview
               </h1>
               {/* Course contentList */}
-              <CourseContentList />
+              <CourseContentList isDemo={true} data={data?.courseData} />
             </div>
             <br />
             <br />
