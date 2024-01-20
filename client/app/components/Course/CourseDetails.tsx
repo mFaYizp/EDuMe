@@ -217,7 +217,7 @@ const CourseDetails: FC<Props> = ({ data }) => {
             <div className="w-full flex justify-end">
               <IoCloseOutline
                 size={40}
-                className="text-black cursor-pointer"
+                className="text-black dark:text-white cursor-pointer"
                 onClick={() => setOpen(false)}
               />
             </div>
