@@ -7,10 +7,12 @@ import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 import CourseContentList from "./CourseContentList";
+import {Elements} from "@stripe/react-stripe-js"; 
+import CheckoutForm from '../payment/CheckoutForm'
 
-type Props = { data: any };
+type Props = { data: any; clientSecret: string; stripePromise: any };
 
-const CourseDetails: FC<Props> = ({ data }) => {
+const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
   const { user } = useSelector((state: any) => state.auth);
   const [open, setOpen] = useState(false);
   const discountPercentage =
@@ -221,6 +223,11 @@ const CourseDetails: FC<Props> = ({ data }) => {
                 onClick={() => setOpen(false)}
               />
             </div>
+            {stripePromise && clientSecret && (
+              <Elements stripe={stripePromise} options={{clientSecret}} >
+                <CheckoutForm setOpen={setOpen} data={data}/>
+              </Elements>
+            )}
           </div>
         </div>
       )}

@@ -26,6 +26,6 @@ orderRouter.get(
 
 orderRouter.get("/payment/stripe-publishable-key", sendStripePublishableKey);
 
-orderRouter.get("/payment", isAuthenticated, newPayment);
+orderRouter.post("/payment", isAuthenticated, newPayment);
 
 export default orderRouter;
