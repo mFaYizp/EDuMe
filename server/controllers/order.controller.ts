@@ -10,7 +10,6 @@ import { getAllOrderService, newOrder } from "../services/order.service";
 import path from "path";
 import sendMail from "../utils/sendMail";
 import { redis } from "../utils/redis";
-import { stringify } from "querystring";
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -89,7 +88,7 @@ export const createOrder = catchAsyncError(
       }
       user?.courses.push(course._id);
 
-      await redis.set(req.user?._id,JSON.stringify(user) as any);
+      await redis.set(req.user?._id, JSON.stringify(user) as any);
 
       await user?.save();
 
@@ -143,7 +142,7 @@ export const newPayment = catchAsyncError(
     try {
       const myPayment = await stripe.paymentIntents.create({
         amount: req.body.amount,
-        currency: "USD",
+        currency: "inr",
         metadata: {
           company: "EDuMe",
         },

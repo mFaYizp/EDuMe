@@ -33,7 +33,7 @@ const CourseDetailPage: FC<Props> = ({ id }) => {
       setStripePromise(loadStripe(publishableKey));
     }
     if (data) {
-      const amount = Math.round(data.course.price * 100);
+      const amount = Math.round(data?.course.price * 100);
       createPaymentIntent(amount);
     }
   }, [config, data]);
@@ -43,6 +43,7 @@ const CourseDetailPage: FC<Props> = ({ id }) => {
       setClientSecret(paymentIntentData?.client_secret);
     }
   }, [paymentIntentData]);
+  
   return (
     <>
       {isLoading ? (

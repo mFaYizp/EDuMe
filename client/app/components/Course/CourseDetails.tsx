@@ -7,8 +7,8 @@ import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 import CourseContentList from "./CourseContentList";
-import {Elements} from "@stripe/react-stripe-js"; 
-import CheckoutForm from '../payment/CheckoutForm'
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../payment/CheckoutForm";
 
 type Props = { data: any; clientSecret: string; stripePromise: any };
 
@@ -219,13 +219,13 @@ const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
             <div className="w-full flex justify-end">
               <IoCloseOutline
                 size={40}
-                className="text-black dark:text-white cursor-pointer"
+                className="text-black dark:text-black cursor-pointer"
                 onClick={() => setOpen(false)}
               />
             </div>
             {stripePromise && clientSecret && (
-              <Elements stripe={stripePromise} options={{clientSecret}} >
-                <CheckoutForm setOpen={setOpen} data={data}/>
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm setOpen={setOpen} data={data} />
               </Elements>
             )}
           </div>

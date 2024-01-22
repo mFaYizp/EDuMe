@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 import React, { FC, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-type Props = { setOpen: boolean; data: any };
+type Props = { setOpen: any; data: any };
 
 const CheckoutForm: FC<Props> = ({ setOpen, data }) => {
   const stripe = useStripe();
@@ -28,10 +28,12 @@ const CheckoutForm: FC<Props> = ({ setOpen, data }) => {
       return;
     }
     setIsLoading(true);
+
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: "if_required",
     });
+
     if (error) {
       setMessage(error.message);
       setIsLoading(false);
@@ -43,16 +45,16 @@ const CheckoutForm: FC<Props> = ({ setOpen, data }) => {
 
   useEffect(() => {
     if (orderData) {
-        setLoadUser(true)
-        redirect(`/course-access/${data._id}`)
+      setLoadUser(true);
+      redirect(`/course-access/${data._id}`);
     }
     if (error) {
-        if ("data" in error) {
-            const errorMessage = error as any;
-            toast.error(errorMessage.data.message);
-        }
+      if ("data" in error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
     }
-  },[orderData, error])
+  }, [orderData, error, data]);
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
@@ -65,7 +67,7 @@ const CheckoutForm: FC<Props> = ({ setOpen, data }) => {
       </button>
       {/* Show any error or success messages */}
       {message && (
-        <div id="payment-message" className="text-red font-Poppins pt-2">
+        <div id="payment-message" className="text-red-500 font-Poppins pt-2">
           {message}
         </div>
       )}
