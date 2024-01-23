@@ -131,7 +131,6 @@ const EditCourse: FC<Props> = ({ id }) => {
     const data = courseData;
 
     await editCourse({ id: editCourseData?._id, data });
-    console.log(editCourseData?._id);
   };
 
   return (
