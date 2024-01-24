@@ -4,12 +4,14 @@ import Loader from "../Loader/Loader";
 import Heading from "@/app/utils/Heading";
 import CourseContentMedia from "./CourseContentMedia";
 import Header from "../Header";
+import CourseContentList from "./CourseContentList";
 
 type Props = {
   id: string;
+  user: any;
 };
 
-const CourseContent: FC<Props> = ({ id }) => {
+const CourseContent: FC<Props> = ({ id, user }) => {
   const { data: contentData, isLoading } = useGetCourseContentQuery(id);
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("Login");
@@ -41,6 +43,14 @@ const CourseContent: FC<Props> = ({ id }) => {
                 data={data}
                 setActiveVideo={setActiveVideo}
                 id={id}
+                activeVideo={activeVideo}
+                user={user}
+              />
+            </div>
+            <div className="hidden 800px:block 800px:col-span-3">
+              <CourseContentList
+                setActiveVideo={setActiveVideo}
+                data={data}
                 activeVideo={activeVideo}
               />
             </div>

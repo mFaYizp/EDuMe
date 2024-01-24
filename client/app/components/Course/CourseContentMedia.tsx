@@ -1,13 +1,21 @@
 import { styles } from "@/app/styles/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
+import Image from "next/image";
 import React, { FC, useState } from "react";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+import {
+  AiFillStar,
+  AiOutlineArrowLeft,
+  AiOutlineArrowRight,
+  AiOutlineStar,
+} from "react-icons/ai";
+import Avatar from "../../../public/assets/avatar.png";
 
 type Props = {
   data: any;
   setActiveVideo: (activeVideo: number) => void;
   id: string;
   activeVideo: number;
+  user: any;
 };
 
 const CourseContentMedia: FC<Props> = ({
@@ -15,8 +23,17 @@ const CourseContentMedia: FC<Props> = ({
   setActiveVideo,
   id,
   activeVideo,
+  user,
 }) => {
   const [activeBar, setActiveBar] = useState(0);
+  const [question, setQuestion] = useState("");
+  const [rating, setRating] = useState(1);
+  const [review, setReview] = useState("");
+
+  const isReviewExist = data?.reviews?.find(
+    (item: any) => item.user._id == user?._id
+  );
+
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
@@ -99,7 +116,105 @@ const CourseContentMedia: FC<Props> = ({
         </div>
       )}
 
-      
+      {activeBar === 2 && (
+        <>
+          <div className="flex w-full">
+            <Image
+              src={user.avatar ? user.avatar.url : Avatar}
+              alt="image"
+              width={50}
+              height={50}
+              className="w-[50px] h-[50px] object-cover rounded-[50%]"
+            />
+            <textarea
+              name=""
+              id=""
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              cols={40}
+              rows={5}
+              placeholder="Write your question...."
+              className="outline-none bg-transparent ml-3 border border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins text-black dark:text-white"
+            ></textarea>
+          </div>
+          <div className="w-full flex justify-end">
+            <div
+              className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-5`}
+            >
+              Submit
+            </div>
+          </div>
+          <br />
+          <br />
+          <div className="w-full h-[1px] bg-[#ffffff3b]">
+            <div>{/* Question reply */}</div>
+          </div>
+        </>
+      )}
+
+      {activeBar === 3 && (
+        <div className="w-full">
+          <>
+            {!isReviewExist && (
+              <>
+                <div className="flex w-full">
+                  <Image
+                    src={user.avatar ? user.avatar.url : Avatar}
+                    alt="image"
+                    width={50}
+                    height={50}
+                    className="w-[50px] h-[50px] object-cover rounded-[50%]"
+                  />
+                  <div className="w-full">
+                    <h5 className="pl-3 text-[20px] text-[500] text-black dark:text-white ">
+                      Give a rating <span className="text-red-500 ">*</span>
+                    </h5>
+                    <div className="flex w-full ml-2 pb-3">
+                      {[1, 2, 3, 4, 5].map((i) =>
+                        rating >= i ? (
+                          <AiFillStar
+                            key={i}
+                            className="mr-1 cursor-pointer"
+                            color="rgb(246, 186, 0)"
+                            size={25}
+                            onClick={() => setRating(i)}
+                          />
+                        ) : (
+                          <AiOutlineStar
+                            key={i}
+                            className="mr-1 cursor-pointer"
+                            color="rgb(246, 186, 0)"
+                            size={25}
+                            onClick={() => setRating(i)}
+                          />
+                        )
+                      )}
+                    </div>
+                    <textarea
+                      name=""
+                      id=""
+                      value={review}
+                      cols={40}
+                      rows={5}
+                      onChange={(e) => setReview(e.target.value)}
+                      className="outline-none bg-transparent ml-3 border border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins text-black dark:text-white"
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="w-full flex justify-end">
+                  <div
+                    className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2`}
+                  >
+                    Submit
+                  </div>
+                </div>
+                <br />
+                <br />
+              </>
+            )}
+          </>
+        </div>
+      )}
     </div>
   );
 };
