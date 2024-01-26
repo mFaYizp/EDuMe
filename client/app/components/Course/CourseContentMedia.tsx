@@ -349,9 +349,60 @@ const CommentItem = ({
                 : "Add Replies"
               : "Hide Replies"}
           </span>
-          <BiMessage size={20} className="cursor-pointer text-[#3b3a3ab8] dark:text-[#ffffff83]"/>
-          <span className="pl-1 mt-[-4px] cursor-pointer  text-[#ffffff83]">{item.questionReplies.length}</span>
+          <BiMessage
+            size={20}
+            className="cursor-pointer text-[#3b3a3ab8] dark:text-[#ffffff83]"
+          />
+          <span className="pl-1 mt-[-4px] cursor-pointer  text-[#ffffff83]">
+            {item.questionReplies.length}
+          </span>
         </div>
+        {replyActive && (
+          <>
+            {item.questionReplies.map((reply: any, index: number) => (
+              <div
+                className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                key={index}
+              >
+                <div>
+                  <Image
+                    src={item.user.avatar ? item.user.avatar.url : Avatar}
+                    alt="image"
+                    width={50}
+                    height={50}
+                    className="w-[50px] h-[50px] object-cover rounded-[50%]"
+                  />
+                </div>
+                <div className="pl-2">
+                  <h5 className="text-[20px]">{item.user.name}</h5>
+                  <p>{item.comment}</p>
+                  <small className=" text-[#ffffff83]">
+                    {format(item.createdAt)}
+                  </small>
+                </div>
+              </div>
+            ))}
+            <>
+              <div className="w-full flex relative text-black dark:text-white">
+                <input
+                  type="text"
+                  placeholder="Enter your answer..."
+                  value={answer}
+                  onChange={(e: any) => setAnswer(e.target.value)}
+                  className="block 800px:ml-12  w-[95%] mt-2 outline-none bg-transparent border-b border-[#00000027] text-black dark:text-white dark:border-[#fff] p-[5px]"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-0 bottom-1"
+                  onClick={handleAnswerSubmit}
+                  disabled={answer === ""}
+                >
+                  Submit
+                </button>
+              </div>
+            </>
+          </>
+        )}
       </div>
     </>
   );
