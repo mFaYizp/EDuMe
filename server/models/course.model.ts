@@ -5,6 +5,7 @@ interface IComment extends Document {
   user: IUser;
   question: string;
   questionReplies?: IComment[];
+  // answer?: string;
 }
 
 interface IReview extends Document {
@@ -61,6 +62,11 @@ const linkSchema = new Schema<ILink>({
   title: String,
   url: String,
 });
+
+// const questionRepliesSchema = new Schema<IComment>({
+//   user: Object,
+//   answer: String,
+// });
 
 const commentSchema = new Schema<IComment>(
   {
