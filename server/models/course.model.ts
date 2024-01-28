@@ -50,12 +50,15 @@ interface ICourse extends Document {
   purchased?: number;
 }
 
-const reviewSchema = new Schema<IReview>({
-  user: Object,
-  rating: { type: Number, default: 0 },
-  comment: String,
-  commentReplies: [Object],
-});
+const reviewSchema = new Schema<IReview>(
+  {
+    user: Object,
+    rating: { type: Number, default: 0 },
+    comment: String,
+    commentReplies: [Object],
+  },
+  { timestamps: true }
+);
 
 const linkSchema = new Schema<ILink>({
   title: String,

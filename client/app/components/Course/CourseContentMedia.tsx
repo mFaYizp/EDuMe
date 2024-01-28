@@ -13,10 +13,13 @@ import toast from "react-hot-toast";
 import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
+  useAddReviewInCourseMutation,
+  useGetCourseDetailsQuery,
 } from "@/redux/features/courses/courseApi";
 import { format } from "timeago.js";
 import { BiMessage } from "react-icons/bi";
 import { VscVerifiedFilled } from "react-icons/vsc";
+import Ratings from "@/app/utils/Ratings";
 
 type Props = {
   data: any;
@@ -42,6 +45,11 @@ const CourseContentMedia: FC<Props> = ({
   const [answer, setAnswer] = useState("");
   const [questionId, setQuestionId] = useState("");
 
+  const { data: courseData, refetch: refetchCourse } = useGetCourseDetailsQuery(
+    id,
+    { refetchOnMountOrArgChange: true }
+  );
+  const course = courseData?.course;
   const [
     addNewQuestion,
     { isSuccess, isLoading: questionCreationLoading, error },
@@ -54,8 +62,16 @@ const CourseContentMedia: FC<Props> = ({
       isLoading: answerCreationLoading,
     },
   ] = useAddAnswerInQuestionMutation();
+  const [
+    addReviewInCourse,
+    {
+      isSuccess: reviewSuccess,
+      error: reviewError,
+      isLoading: reviewCreationLoading,
+    },
+  ] = useAddReviewInCourseMutation();
 
-  const isReviewExist = data?.reviews?.find(
+  const isReviewExist = course?.reviews?.find(
     (item: any) => item.user._id == user?._id
   );
 
@@ -72,8 +88,13 @@ const CourseContentMedia: FC<Props> = ({
     }
   };
 
-  const handleReview = async (e: any) => {
+  const handleReviewSubmit = async (e: any) => {
     e.preventDefault();
+    if (review.length === 0) {
+      toast.error("Please fill the reviews");
+    } else {
+      addReviewInCourse({ review, rating, courseId: id });
+    }
   };
 
   useEffect(() => {
@@ -87,6 +108,13 @@ const CourseContentMedia: FC<Props> = ({
       refetch();
       toast.success("Answer added successfully!");
     }
+    if (reviewSuccess) {
+      setReview("");
+      setRating(1);
+      refetch();
+      refetchCourse();
+      toast.success("Review added successfully!");
+    }
     if (answerError) {
       if ("data" in answerError) {
         const errorMessage = answerError as any;
@@ -99,7 +127,22 @@ const CourseContentMedia: FC<Props> = ({
         toast.error(errorMessage.data.message);
       }
     }
-  }, [isSuccess, error, answerError, isAnswerSuccess, refetch]);
+    if (reviewError) {
+      if ("data" in reviewError) {
+        const errorMessage = reviewError as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [
+    isSuccess,
+    error,
+    answerError,
+    isAnswerSuccess,
+    refetch,
+    reviewError,
+    reviewSuccess,
+    refetchCourse,
+  ]);
 
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
@@ -286,6 +329,7 @@ const CourseContentMedia: FC<Props> = ({
                       name=""
                       id=""
                       value={review}
+                      placeholder="Write your review...."
                       cols={40}
                       rows={5}
                       onChange={(e) => setReview(e.target.value)}
@@ -295,8 +339,14 @@ const CourseContentMedia: FC<Props> = ({
                 </div>
                 <div className="w-full flex justify-end">
                   <div
-                    className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2`}
-                    onClick={handleReview}
+                    className={`${
+                      styles.button
+                    } !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2 ${
+                      reviewCreationLoading && "cursor-no-drop"
+                    }`}
+                    onClick={
+                      reviewCreationLoading ? () => {} : handleReviewSubmit
+                    }
                   >
                     Submit
                   </div>
@@ -305,6 +355,37 @@ const CourseContentMedia: FC<Props> = ({
                 <br />
               </>
             )}
+            <br />
+            <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
+            <div className="w-full text-black dark:text-white">
+              {(course?.reviews && [...course.reviews].reverse())?.map(
+                (item: any, index: number) => (
+                  <div className="w-full my-5" key={index}>
+                    <div className="w-full flex ">
+                      <div>
+                        <Image
+                          src={item.user.avatar ? item.user.avatar.url : Avatar}
+                          alt="image"
+                          width={40}
+                          height={40}
+                          className="h-[40px] w-[40px] object-cover rounded-[50%]"
+                        />
+                      </div>
+                      <div className="ml-2">
+                        <h1 className="text-[18px]">{item?.user.name}</h1>
+                        <Ratings rating={item.rating} />
+                        <p>{item.comment}</p>
+                        <small className=" text-[#ffffff83]">
+                          {format(item.createdAt)} •{" "}
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+            <br />
+            
           </>
         </div>
       )}
