@@ -43,7 +43,7 @@ export const editCourse = catchAsyncError(
       const data = req.body;
       const thumbnail = data.thumbnail;
       const courseId = req.params.id;
-      const courseData = await courseModel.findById(courseId) as any;
+      const courseData = (await courseModel.findById(courseId)) as any;
 
       if (thumbnail && !thumbnail.startsWith("https")) {
         await cloudinary.v2.uploader.destroy(courseData.thumbnail?.public_id);
@@ -236,6 +236,8 @@ export const addAnswer = catchAsyncError(
       const newAnswer: any = {
         user: req.user,
         answer,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       question.questionReplies?.push(newAnswer);
@@ -364,6 +366,8 @@ export const AddReplyToReview = catchAsyncError(
       const replyData: any = {
         user: req.user,
         comment,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       if (!review.commentReplies) {

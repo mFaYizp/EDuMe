@@ -99,7 +99,7 @@ const CourseContentMedia: FC<Props> = ({
         toast.error(errorMessage.data.message);
       }
     }
-  }, [isSuccess, error, answerError, isAnswerSuccess]);
+  }, [isSuccess, error, answerError, isAnswerSuccess, refetch]);
 
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
@@ -397,21 +397,26 @@ const CommentItem = ({
         </div>
         {replyActive && (
           <>
-            {item.questionReplies.map((reply: any,index:number) => (
-              <div className="w-full flex 800px:ml-16 my-5 text-black dark:text-white" key={index}>
+            {item.questionReplies.map((reply: any, index: number) => (
+              <div
+                className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                key={index}
+              >
                 <div>
                   <Image
                     src={reply.user.avatar ? reply.user.avatar.url : Avatar}
                     alt="image"
-                    width={50}
-                    height={50}
-                    className="w-[50px] h-[50px] object-cover rounded-[50%]"
+                    width={40}
+                    height={40}
+                    className="w-[auto] h-[40px] object-cover rounded-[50%]"
                   />
                 </div>
                 <div className="pl-3">
                   <div className="flex items-center">
-                    <h5 className="text-[20px]">{reply.user.name}</h5>{" "}
-                    <VscVerifiedFilled className="ml-2 text-[#52c952] text-[20px]" />
+                    <h5 className="text-[20px]">{reply.user.name}</h5>
+                    {item.user?.role === "admin" && (
+                      <VscVerifiedFilled className="ml-2 text-[#52c952] text-[20px]" />
+                    )}
                   </div>
                   <p>{reply.answer}</p>
                   <small className=" text-[#ffffff83]">
@@ -434,7 +439,7 @@ const CommentItem = ({
                 />
                 <button
                   type="submit"
-                  className="absolute right-0 bottom-1"
+                  className="absolute right-[-45px] bottom-1"
                   onClick={handleAnswerSubmit}
                   disabled={answer === "" || answerCreationLoading}
                 >
