@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
+  useAddReplyInReviewMutation,
   useAddReviewInCourseMutation,
   useGetCourseDetailsQuery,
 } from "@/redux/features/courses/courseApi";
@@ -44,6 +45,9 @@ const CourseContentMedia: FC<Props> = ({
   const [review, setReview] = useState("");
   const [answer, setAnswer] = useState("");
   const [questionId, setQuestionId] = useState("");
+  const [isReviewReply, setIsReviewReply] = useState(false);
+  const [reply, setReply] = useState("");
+  const [reviewId, setReviewId] = useState("");
 
   const { data: courseData, refetch: refetchCourse } = useGetCourseDetailsQuery(
     id,
@@ -70,6 +74,14 @@ const CourseContentMedia: FC<Props> = ({
       isLoading: reviewCreationLoading,
     },
   ] = useAddReviewInCourseMutation();
+  const [
+    addReplyInReview,
+    {
+      isSuccess: reviewReplySuccess,
+      error: reviewReplyError,
+      isLoading: reviewReplyCreationLoading,
+    },
+  ] = useAddReplyInReviewMutation();
 
   const isReviewExist = course?.reviews?.find(
     (item: any) => item.user._id == user?._id
@@ -111,9 +123,20 @@ const CourseContentMedia: FC<Props> = ({
     if (reviewSuccess) {
       setReview("");
       setRating(1);
-      refetch();
       refetchCourse();
       toast.success("Review added successfully!");
+    }
+    if (reviewReplySuccess) {
+      setReply("");
+      refetchCourse();
+      setIsReviewReply(false)
+      toast.success("Reply added successfully!");
+    }
+    if (reviewReplyError) {
+      if ("data" in reviewReplyError) {
+        const errorMessage = reviewReplyError as any;
+        toast.error(errorMessage.data.message);
+      }
     }
     if (answerError) {
       if ("data" in answerError) {
@@ -142,6 +165,8 @@ const CourseContentMedia: FC<Props> = ({
     reviewError,
     reviewSuccess,
     refetchCourse,
+    reviewReplySuccess,
+    reviewReplyError,
   ]);
 
   const handleAnswerSubmit = () => {
@@ -151,6 +176,20 @@ const CourseContentMedia: FC<Props> = ({
       contentId: data[activeVideo]._id,
       questionId: questionId,
     });
+  };
+
+  const handleReviewReplySubmit = () => {
+    if (!reviewCreationLoading) {
+      if (reply.length === 0) {
+        toast.error("Please fill the reply...");
+      } else {
+        addReplyInReview({
+          courseId: id,
+          comment: reply,
+          reviewId,
+        });
+      }
+    }
   };
 
   return (
@@ -375,17 +414,74 @@ const CourseContentMedia: FC<Props> = ({
                         <h1 className="text-[18px]">{item?.user.name}</h1>
                         <Ratings rating={item.rating} />
                         <p>{item.comment}</p>
-                        <small className=" text-[#ffffff83]">
+                        <small className="text-[#ffffff83] dark:text-[#ffffff83]">
                           {format(item.createdAt)} •{" "}
                         </small>
                       </div>
                     </div>
+                    {user.role === "admin" && (
+                      <span
+                        className={`${styles.label} !ml-10 cursor-pointer`}
+                        onClick={() => {
+                          setIsReviewReply(true), setReviewId(item._id);
+                        }}
+                      >
+                        Add Reply{" "}
+                      </span>
+                    )}
+                    {isReviewReply && (
+                      <div className="w-full flex relative text-black dark:text-white">
+                        <input
+                          type="text"
+                          value={reply}
+                          onChange={(e) => setReply(e.target.value)}
+                          placeholder="Enter your reply..."
+                          className={`block 800px:ml-12  w-[95%] mt-2 outline-none bg-transparent border-b border-[#00000027] text-black dark:text-white dark:border-[#fff] p-[5px] 
+`}
+                        />
+                        <button
+                          type="submit"
+                          className="absolute right-[-45px] bottom-1"
+                          onClick={handleReviewReplySubmit}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    )}
+                    {
+                      item.commentReplies.map((reply:any,index:number)=>(
+                        <div
+                className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                key={index}
+              >
+                <div>
+                  <Image
+                    src={reply.user.avatar ? reply.user.avatar.url : Avatar}
+                    alt="image"
+                    width={40}
+                    height={40}
+                    className="w-[40px] h-[40px] object-cover rounded-[50%]"
+                  />
+                </div>
+                <div className="pl-3">
+                  <div className="flex items-center">
+                    <h5 className="text-[20px]">{reply.user.name}</h5>
+                    {item.user?.role === "admin" && (
+                      <VscVerifiedFilled className="ml-2 text-[#52c952] text-[20px]" />
+                    )}
+                  </div>
+                  <p>{reply.comment}</p>
+                  <small className=" text-[#ffffff83]">
+                    {format(reply.createdAt)}
+                  </small>
+                </div>
+              </div>
+                      ))
+                    }
                   </div>
                 )
               )}
             </div>
-            <br />
-            
           </>
         </div>
       )}

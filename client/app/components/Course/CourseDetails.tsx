@@ -10,6 +10,9 @@ import CourseContentList from "./CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../payment/CheckoutForm";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import Image from "next/image";
+import Avatar from "../../../public/assets/avatar.png";
+import { VscVerifiedFilled } from "react-icons/vsc";
 
 type Props = { data: any; clientSecret: string; stripePromise: any };
 
@@ -137,11 +140,13 @@ console.log(isPurchased);
                   <div className="w-full pb-4" key={index}>
                     <div className="flex">
                       <div className="w-[50px] h-[50px]">
-                        <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
-                          <h1 className="uppercase text-[18px] text-black dark:text-white">
-                            {item.user.name.slice(0, 2)}
-                          </h1>
-                        </div>
+                      <Image
+                    src={item.user.avatar ? item.user.avatar.url : Avatar}
+                    alt="image"
+                    width={40}
+                    height={40}
+                    className="w-[40px] h-[40px] object-cover rounded-[50%]"
+                  />
                       </div>
                       <div className="hidden 800px:block pl-2">
                         <div className="flex items-center">
@@ -164,6 +169,34 @@ console.log(isPurchased);
                         <Ratings rating={item.rating} />
                       </div>
                     </div>
+                    {item.commentReplies.map((reply:any, index:number) => (
+                       <div
+                       className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                       key={index}
+                     >
+                       <div>
+                         <Image
+                           src={reply.user.avatar ? reply.user.avatar.url : Avatar}
+                           alt="image"
+                           width={40}
+                           height={40}
+                           className="w-[40px] h-[40px] object-cover rounded-[50%]"
+                         />
+                       </div>
+                       <div className="pl-3">
+                         <div className="flex items-center">
+                           <h5 className="text-[20px]">{reply.user.name}</h5>
+                           {item.user?.role === "admin" && (
+                             <VscVerifiedFilled className="ml-2 text-[#52c952] text-[20px]" />
+                           )}
+                         </div>
+                         <p>{reply.comment}</p>
+                         <small className=" text-[#ffffff83]">
+                           {format(reply.createdAt)}
+                         </small>
+                       </div>
+                     </div>
+                    ))}
                   </div>
                 )
               )}

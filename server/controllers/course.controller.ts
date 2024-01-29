@@ -311,8 +311,6 @@ export const addReview = catchAsyncError(
         user: req.user,
         comment: review,
         rating,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
       course?.reviews.push(reviewData);
 
@@ -381,6 +379,7 @@ export const AddReplyToReview = catchAsyncError(
       review.commentReplies?.push(replyData);
 
       await course?.save();
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800);
 
       res.status(200).json({ success: true, course });
     } catch (error: any) {
