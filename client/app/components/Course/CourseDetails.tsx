@@ -284,7 +284,7 @@ const CourseDetails: FC<Props> = ({
             </div>
             {stripePromise && clientSecret && (
               <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm setOpen={setOpen} data={data} />
+                <CheckoutForm setOpen={setOpen} data={data} user={user}/>
               </Elements>
             )}
           </div>

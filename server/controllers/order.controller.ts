@@ -5,7 +5,7 @@ import orderModel, { IOrder } from "../models/order.model";
 import ejs from "ejs";
 import ErrorHandler from "../utils/ErrorHandler";
 import userModel from "../models/user.model";
-import courseModel from "../models/course.model";
+import courseModel, { ICourse } from "../models/course.model";
 import { getAllOrderService, newOrder } from "../services/order.service";
 import path from "path";
 import sendMail from "../utils/sendMail";
@@ -45,7 +45,7 @@ export const createOrder = catchAsyncError(
         );
       }
 
-      const course = await courseModel.findById(courseId);
+      const course:ICourse | null = await courseModel.findById(courseId);
       if (!course) {
         return next(new ErrorHandler("Course not found", 404));
       }
@@ -98,7 +98,7 @@ export const createOrder = catchAsyncError(
         message: `You have a new order from ${course.name}`,
       });
 
-      course.purchased = (course.purchased || 0) + 1;
+      course.purchased = course.purchased + 1;
 
       await course.save();
 
