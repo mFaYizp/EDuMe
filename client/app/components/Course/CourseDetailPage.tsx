@@ -43,7 +43,7 @@ const CourseDetailPage: FC<Props> = ({ id }) => {
       setClientSecret(paymentIntentData?.client_secret);
     }
   }, [paymentIntentData]);
-  
+
   return (
     <>
       {isLoading ? (
@@ -61,13 +61,15 @@ const CourseDetailPage: FC<Props> = ({ id }) => {
             setRoute={setRoute}
             open={open}
             setOpen={setOpen}
-            activeltem={1}
+            activeItem={1}
           />
           {stripePromise && (
             <CourseDetails
               data={data?.course}
               stripePromise={stripePromise}
               clientSecret={clientSecret}
+              setOpen={setOpen}
+              setRoute={setRoute}
             />
           )}
           <Footer />

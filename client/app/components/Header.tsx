@@ -61,7 +61,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         toast.error(errorData.data.message);
       }
     }
-  }, [data, user]);
+  }, [data, user,error]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {

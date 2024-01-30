@@ -52,7 +52,7 @@ const Page = (props: Props) => {
             setRoute={setRoute}
             open={open}
             setOpen={setOpen}
-            setActive={1}
+            activeItem={1}
           />
           <div className="w-[95%] 800px:w-[85%] m-auto min-h-[70vh]">
             <Heading
@@ -100,11 +100,11 @@ const Page = (props: Props) => {
             <br />
             <br />
             <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-4 1500px:gap-[35px] mb-10">
-  {courses && courses.map((item: any, index: number) => (
-    <CourseCard item={item} key={index} />
-  ))}
-</div>
-
+              {courses &&
+                courses.map((item: any, index: number) => (
+                  <CourseCard item={item} key={index} />
+                ))}
+            </div>
           </div>
         </>
       )}

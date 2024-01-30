@@ -2,7 +2,7 @@ import { styles } from "@/app/styles/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
 import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
@@ -14,12 +14,28 @@ import Image from "next/image";
 import Avatar from "../../../public/assets/avatar.png";
 import { VscVerifiedFilled } from "react-icons/vsc";
 
-type Props = { data: any; clientSecret: string; stripePromise: any };
+type Props = {
+  data: any;
+  clientSecret: string;
+  stripePromise: any;
+  setRoute: any;
+  setOpen: any;
+};
 
-const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
+const CourseDetails: FC<Props> = ({
+  data,
+  clientSecret,
+  stripePromise,
+  setRoute,
+  setOpen: openAuthModal,
+}) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const user = userData?.user;
-
+  const [user, setUser] = useState<any>();
+  
+  useEffect(() => {
+    setUser(userData?.user);
+  }, [user,userData]);
+  
   const [open, setOpen] = useState(false);
   const discountPercentage =
     ((data?.estimatedPrice - data.price) / data?.estimatedPrice) * 100;
@@ -30,9 +46,13 @@ const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
     user && user?.courses?.find((item: any) => item._id == data._id);
 
   const handleOrder = (e: any) => {
-    setOpen(true);
+    if (user) {
+      setOpen(true);
+    } else {
+      setRoute("Login");
+      openAuthModal(true);
+    }
   };
-console.log(isPurchased);
 
   return (
     <div>
@@ -140,13 +160,13 @@ console.log(isPurchased);
                   <div className="w-full pb-4" key={index}>
                     <div className="flex">
                       <div className="w-[50px] h-[50px]">
-                      <Image
-                    src={item.user.avatar ? item.user.avatar.url : Avatar}
-                    alt="image"
-                    width={40}
-                    height={40}
-                    className="w-[40px] h-[40px] object-cover rounded-[50%]"
-                  />
+                        <Image
+                          src={item.user.avatar ? item.user.avatar.url : Avatar}
+                          alt="image"
+                          width={40}
+                          height={40}
+                          className="w-[40px] h-[40px] object-cover rounded-[50%]"
+                        />
                       </div>
                       <div className="hidden 800px:block pl-2">
                         <div className="flex items-center">
@@ -169,33 +189,35 @@ console.log(isPurchased);
                         <Ratings rating={item.rating} />
                       </div>
                     </div>
-                    {item.commentReplies.map((reply:any, index:number) => (
-                       <div
-                       className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
-                       key={index}
-                     >
-                       <div>
-                         <Image
-                           src={reply.user.avatar ? reply.user.avatar.url : Avatar}
-                           alt="image"
-                           width={40}
-                           height={40}
-                           className="w-[40px] h-[40px] object-cover rounded-[50%]"
-                         />
-                       </div>
-                       <div className="pl-3">
-                         <div className="flex items-center">
-                           <h5 className="text-[20px]">{reply.user.name}</h5>
-                           {item.user?.role === "admin" && (
-                             <VscVerifiedFilled className="ml-2 text-[#52c952] text-[20px]" />
-                           )}
-                         </div>
-                         <p>{reply.comment}</p>
-                         <small className=" text-[#ffffff83]">
-                           {format(reply.createdAt)}
-                         </small>
-                       </div>
-                     </div>
+                    {item.commentReplies.map((reply: any, index: number) => (
+                      <div
+                        className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                        key={index}
+                      >
+                        <div>
+                          <Image
+                            src={
+                              reply.user.avatar ? reply.user.avatar.url : Avatar
+                            }
+                            alt="image"
+                            width={40}
+                            height={40}
+                            className="w-[40px] h-[40px] object-cover rounded-[50%]"
+                          />
+                        </div>
+                        <div className="pl-3">
+                          <div className="flex items-center">
+                            <h5 className="text-[20px]">{reply.user.name}</h5>
+                            {item.user?.role === "admin" && (
+                              <VscVerifiedFilled className="ml-2 text-[#52c952] text-[20px]" />
+                            )}
+                          </div>
+                          <p>{reply.comment}</p>
+                          <small className=" text-[#ffffff83]">
+                            {format(reply.createdAt)}
+                          </small>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )
