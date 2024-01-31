@@ -59,8 +59,6 @@ const About = (props: Props) => {
         <span className="text-[22px]">MohammedFayiz-</span>
         <h5 className="text-[18px] font-poppins">Founder and CEO of EDuMe</h5>
         <br />
-        <br />
-        <br />
       </div>
     </div>
   );

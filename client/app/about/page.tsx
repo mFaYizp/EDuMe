@@ -12,7 +12,7 @@ const Page = (props: Props) => {
   const [activeItem, setActiveItem] = useState(2);
   const [route, setRoute] = useState("Login");
   return (
-    <div>
+    <div className="min-h-screen">
       <Heading
         title="About us - EDuMe"
         description="EDuMe is a learning management system for helping programmers."
@@ -26,6 +26,7 @@ const Page = (props: Props) => {
         route={route}
       />
       <About/>
+      <br />
       <Footer/>
     </div>
   );

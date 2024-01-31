@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Heading from "../utils/Heading";
 import Header from "../components/Header";
 import Footer from "../components/Route/Footer";
+import FAQ from "../components/Route/FAQ";
 
 type Props = {};
 
@@ -11,7 +12,7 @@ const Page = (props: Props) => {
   const [activeItem, setActiveItem] = useState(4);
   const [route, setRoute] = useState("Login");
   return (
-    <div>
+    <div className="min-h-screen">
       <Heading
         title="Policy - EDuMe"
         description="EDuMe is a learning management system for helping programmers."
@@ -24,6 +25,9 @@ const Page = (props: Props) => {
         activeItem={activeItem}
         route={route}
       />
+      <br />
+      <FAQ/>
+      <br />
       <Footer />
     </div>
   );
