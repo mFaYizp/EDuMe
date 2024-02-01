@@ -134,7 +134,7 @@ const CourseContent: FC<Props> = ({
             item.videoSection !== courseContentData[index - 1].videoSection;
           return (
             <>
-              <div
+              <div key={index}
                 className={`w-full bg-[#cdc8c817] p-4 ${
                   showSectionInput ? "mt-10" : "mb-0"
                 }`}
@@ -264,8 +264,7 @@ const CourseContent: FC<Props> = ({
                     </div>
 
                     {item?.links.map((link: any, linkIndex: number) => (
-                      // eslint-disable-next-line react/jsx-key
-                      <div className="mb-3 block">
+                      <div className="mb-3 block" key={linkIndex}>
                         <div className="w-full flex items-center justify-between">
                           <label className={`${styles.label}`}>
                             Link {linkIndex + 1}
