@@ -31,11 +31,11 @@ const CourseDetails: FC<Props> = ({
 }) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
   const [user, setUser] = useState<any>();
-  
+
   useEffect(() => {
     setUser(userData?.user);
-  }, [user,userData]);
-  
+  }, [user, userData]);
+
   const [open, setOpen] = useState(false);
   const discountPercentage =
     ((data?.estimatedPrice - data.price) / data?.estimatedPrice) * 100;
@@ -284,7 +284,7 @@ const CourseDetails: FC<Props> = ({
             </div>
             {stripePromise && clientSecret && (
               <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm setOpen={setOpen} data={data} user={user}/>
+                <CheckoutForm setOpen={setOpen} data={data} user={user} />
               </Elements>
             )}
           </div>

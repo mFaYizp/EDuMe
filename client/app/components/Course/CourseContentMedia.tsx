@@ -128,13 +128,12 @@ const CourseContentMedia: FC<Props> = ({
       setAnswer("");
       refetch();
       toast.success("Answer added successfully!");
-      if (user.role !== 'admin') {
+      if (user.role !== "admin") {
         socketId.emit("notification", {
           title: "New Reply Received",
           message: `You have new  question reply in ${data[activeVideo].title}`,
           userId: user._id,
         });
-        
       }
     }
     if (reviewSuccess) {
@@ -343,6 +342,7 @@ const CourseContentMedia: FC<Props> = ({
               user={user}
               setQuestionId={setQuestionId}
               answerCreationLoading={answerCreationLoading}
+              questionId={questionId}
             />
           </div>
         </>
@@ -441,17 +441,18 @@ const CourseContentMedia: FC<Props> = ({
                         </small>
                       </div>
                     </div>
-                    {user.role === "admin" && (
-                      <span
-                        className={`${styles.label} !ml-10 cursor-pointer`}
-                        onClick={() => {
-                          setIsReviewReply(true), setReviewId(item._id);
-                        }}
-                      >
-                        Add Reply{" "}
-                      </span>
-                    )}
-                    {isReviewReply && (
+                    {user.role === "admin" &&
+                      item.commentReplies.length === 0 && (
+                        <span
+                          className={`${styles.label} !ml-10 cursor-pointer`}
+                          onClick={() => {
+                            setIsReviewReply(true), setReviewId(item._id);
+                          }}
+                        >
+                          Add Reply{" "}
+                        </span>
+                      )}
+                    {isReviewReply  && reviewId === item._id && (
                       <div className="w-full flex relative text-black dark:text-white">
                         <input
                           type="text"
@@ -520,6 +521,7 @@ const CommentReply = ({
   answerCreationLoading,
   user,
   setQuestionId,
+  questionId
 }: any) => {
   return (
     <>
@@ -536,6 +538,7 @@ const CommentReply = ({
             setQuestionId={setQuestionId}
             handleAnswerSubmit={handleAnswerSubmit}
             answerCreationLoading={answerCreationLoading}
+            questionId={questionId}
           />
         ))}
       </div>
@@ -552,6 +555,7 @@ const CommentItem = ({
   setQuestionId,
   handleAnswerSubmit,
   answerCreationLoading,
+  questionId,
 }: any) => {
   const [replyActive, setReplyActive] = useState(false);
   return (
@@ -594,7 +598,7 @@ const CommentItem = ({
             {item.questionReplies.length}
           </span>
         </div>
-        {replyActive && (
+        {replyActive && questionId === item._id && (
           <>
             {item.questionReplies.map((reply: any, index: number) => (
               <div
